@@ -1,0 +1,9 @@
+name: Release Train
+
+on:
+  workflow_dispatch:
+
+jobs:
+  call-release-train:
+    uses: regatus/devops/.github/workflows/release-train.yml@main
+    secrets: inherit
