@@ -5,5 +5,8 @@ on:
 
 jobs:
   call-release-train:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
     uses: regatus/devops/.github/workflows/release-train.yml@main
     secrets: inherit
