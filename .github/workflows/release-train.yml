@@ -5,6 +5,8 @@ on:
 
 permissions:
   contents: write
+  pull-requests: write
+  statuses: write
 
 jobs:
   call-release-train:
