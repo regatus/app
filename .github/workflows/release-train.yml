@@ -29,4 +29,5 @@ jobs:
       statuses: write
     secrets:
       GITHUB_TOKEN: ${{ needs.generate-token.outputs.token }}
+    with:
       TEAMS_WEBHOOK_URL: ${{ secrets.TEAMS_WEBHOOK_URL }}
