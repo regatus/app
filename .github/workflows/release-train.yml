@@ -24,6 +24,10 @@ jobs:
   call-release-train:
     needs: generate-token
     uses: regatus/devops/.github/workflows/release-train.yml@main
+    permissions:
+      contents: write
+      pull-requests: write
+      statuses: write
     secrets:
       GITHUB_TOKEN: ${{ needs.generate-token.outputs.token }}
       TEAMS_WEBHOOK_URL: ${{ secrets.TEAMS_WEBHOOK_URL }}
