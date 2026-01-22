@@ -1,4 +1,4 @@
-name: Release Train
+name: Call Release Train
 
 on:
   workflow_dispatch:
@@ -7,10 +7,12 @@ permissions:
   contents: write
   pull-requests: write
   statuses: write
-  
+
 jobs:
-  call-release-train:
+  generate-token:
     runs-on: ubuntu-latest
+    outputs:
+      token: ${{ steps.app_token.outputs.token }}
     steps:
       - name: Generate GitHub App token
         id: app_token
@@ -19,9 +21,10 @@ jobs:
           app_id: ${{ secrets.E2E_APP_ID }}
           private_key: ${{ secrets.E2E_APP_PRIVATE_KEY }}
 
-      - name: Call Release Train workflow
-        uses: regatus/devops/.github/workflows/release-train.yml@main
-        with:
-          teams_webhook_url: ${{ secrets.TEAMS_WEBHOOK_URL }}
-        env:
-          GITHUB_TOKEN: ${{ steps.app_token.outputs.token }}
+  call-release-train:
+    needs: generate-token
+    uses: regatus/devops/.github/workflows/release-train.yml@main
+    with:
+      teams_webhook_url: ${{ secrets.TEAMS_WEBHOOK_URL }}
+    env:
+      GITHUB_TOKEN: ${{ needs.generate-token.outputs.token }}
