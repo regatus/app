@@ -7,8 +7,21 @@ permissions:
   contents: write
   pull-requests: write
   statuses: write
-
+  
 jobs:
   call-release-train:
-    uses: regatus/devops/.github/workflows/release-train.yml@main
-    secrets: inherit
+    runs-on: ubuntu-latest
+    steps:
+      - name: Generate GitHub App token
+        id: app_token
+        uses: tibdex/github-app-token@v1
+        with:
+          app_id: ${{ secrets.E2E_APP_ID }}
+          private_key: ${{ secrets.E2E_APP_PRIVATE_KEY }}
+
+      - name: Call Release Train workflow
+        uses: regatus/devops/.github/workflows/release-train.yml@main
+        with:
+          teams_webhook_url: ${{ secrets.TEAMS_WEBHOOK_URL }}
+        env:
+          GITHUB_TOKEN: ${{ steps.app_token.outputs.token }}
