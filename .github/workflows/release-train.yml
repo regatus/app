@@ -4,10 +4,9 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: write
-  pull-requests: write
-  statuses: write
-
+  contents: read
+  actions: read
+  
 jobs:
   generate-token:
     runs-on: ubuntu-latest
