@@ -1,0 +1,37 @@
+name: Freeze Check Status
+
+on:
+  pull_request:
+    types:
+      - opened
+      - ready_for_review
+      - reopened
+      - synchronize
+
+permissions:
+  statuses: write
+  pull-requests: read
+  contents: read
+
+jobs:
+  generate-token:
+    runs-on: ubuntu-latest
+    outputs:
+      token: ${{ steps.app_token.outputs.token }}
+    steps:
+      - name: Generate GitHub App token
+        id: app_token
+        uses: tibdex/github-app-token@v1
+        with:
+          app_id: ${{ secrets.E2E_APP_ID }}
+          private_key: ${{ secrets.E2E_APP_PRIVATE_KEY }}
+
+  check-freeze-status:
+    needs: generate-token
+    if: github.event.pull_request.base.ref == 'develop'
+    uses: regatus/devops/.github/workflows/check-freeze-status.yml@main
+    with:
+      pr_number: ${{ github.event.pull_request.number }}
+      target_branch: "develop"
+    secrets:
+      GITHUB_TOKEN: ${{ needs.generate-token.outputs.token }}
